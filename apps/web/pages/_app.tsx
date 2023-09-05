@@ -23,7 +23,7 @@ function App({ Component, pageProps }: AppProps) {
             <ProjectProvider>
               <PoolProvider>
                 <NextHead>
-                  <title>Osmotic Fund</title>
+                  <title>equilibra</title>
                 </NextHead>
 
                 {mounted && <Component {...pageProps} />}
