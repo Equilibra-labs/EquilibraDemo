@@ -32,7 +32,9 @@ export const Home = () => {
             />
           ))}
         </Stack>
-        <Heading size="lg">Active Projects</Heading>
+        <h2 className="text-slate-200">Active Projects</h2>
+        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <p className="text-white text-lg">Hi!</p>
       </Stack>
     </>
   );
