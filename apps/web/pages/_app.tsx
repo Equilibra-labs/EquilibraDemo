@@ -17,22 +17,20 @@ function App({ Component, pageProps }: AppProps) {
   React.useEffect(() => setMounted(true), []);
   return (
     <WagmiConfig client={client}>
-      <ChakraProvider>
-        <CSSReset />
-        <RainbowKitProvider chains={chains}>
-          <SupportListProvider>
-            <ProjectProvider>
-              <PoolProvider>
-                <NextHead>
-                  <title>equilibra</title>
-                </NextHead>
+      <CSSReset />
+      <RainbowKitProvider chains={chains}>
+        <SupportListProvider>
+          <ProjectProvider>
+            <PoolProvider>
+              <NextHead>
+                <title>equilibra</title>
+              </NextHead>
 
-                {mounted && <Component {...pageProps} />}
-              </PoolProvider>
-            </ProjectProvider>
-          </SupportListProvider>
-        </RainbowKitProvider>
-      </ChakraProvider>
+              {mounted && <Component {...pageProps} />}
+            </PoolProvider>
+          </ProjectProvider>
+        </SupportListProvider>
+      </RainbowKitProvider>
     </WagmiConfig>
   );
 }
