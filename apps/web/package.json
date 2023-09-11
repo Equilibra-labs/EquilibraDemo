@@ -25,7 +25,9 @@
     "react-dom": "18.2.0",
     "react-icons": "^4.8.0",
     "ui": "workspace:*",
-    "wagmi": "^0.10.10"
+    "wagmi": "^0.10.10",
+    "dotenv": "^16.0.3",
+    "envfile": "^6.18.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
