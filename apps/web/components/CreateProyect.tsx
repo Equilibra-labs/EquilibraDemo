@@ -9,7 +9,7 @@ import * as ProjectRegistry from "../abi/ProjectRegistry.json";
 
 export const CreateProyect = () => {
   const [beneficary, setBeneficary] = React.useState(
-    "0x2cc10a00c6906910601680B9186751f2aFBB4B49"
+    "0x69646Cc8e833A808Edbb1ee8def5B0BBde3879ee"
   );
   const debouncedBeneficiary = useDebounce(beneficary);
 
@@ -25,7 +25,7 @@ export const CreateProyect = () => {
     functionName: "registerProject",
     args: [debouncedBeneficiary, CONTENTHASH],
     overrides: {
-      gasLimit: 21000,
+      gasLimit: 180000,
     },
   });
   const { data, error, isError, write } = useContractWrite(config);
@@ -37,18 +37,19 @@ export const CreateProyect = () => {
   return (
     <>
       <button
-        className="rounded-full border-2 cursor-pointer w-full"
-        disabled={!write || isLoading}
+        className="rounded-full capitalize font-normal font-white w-full  transition-all tracking-widest flex items-center justify-center hover:bg-white hover:text-black border-2 "
         onClick={() => write?.()}
       >
-        {isLoading ? "Minting..." : "Send Transaction"}
+        {isLoading ? "Sending" : "Send Mock Data Transaction"}
       </button>
 
       {isSuccess && (
-        <div>
-          Successfully minted your NFT!
+        <div className="text-green-300">
+          Successfully Created a Project!
           <div>
-            <a href={`https://etherscan.io/tx/${data?.hash}`}>Etherscan</a>
+            <a href={`https://goerli.etherscan.io/tx/${data?.hash}`}>
+              Check etherscan Transaction Hash
+            </a>
           </div>
         </div>
       )}

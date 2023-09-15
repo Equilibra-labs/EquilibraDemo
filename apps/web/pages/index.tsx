@@ -3,6 +3,8 @@ import DemoLayout from "../components/DemoLayout";
 import Send from "~/components/SendTransaction";
 import ChainData from "~/components/ChainData";
 import { CreateProyect } from "~/components/CreateProyect";
+import { CreateProjectForm } from "~/components/CreateProyectForm";
+
 function Home() {
   return (
     <>
@@ -13,8 +15,11 @@ function Home() {
         <div className="w-full mt-8 h-full flex p-4 space-x-2">
           <DemoLayout title={"Create proyect"}>
             <CreateProyect />
+            <CreateProjectForm />
           </DemoLayout>
-          <DemoLayout title={"Create proyect 2"}></DemoLayout>
+          <DemoLayout title={"Create Pool"}>
+            <h1></h1>
+          </DemoLayout>
         </div>
         {/* <Send /> */}
         {/* <HexEncodeForm /> */}

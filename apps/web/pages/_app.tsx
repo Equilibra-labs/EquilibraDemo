@@ -11,14 +11,14 @@ import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
   [goerli, optimism],
-  [publicProvider()]
+  [infuraProvider({ apiKey: process.env.INFURA_API_KEY })]
 );
 const { connectors } = getDefaultWallets({
   appName: "Equilibra-demo",
   chains,
 });
 const wagmiClient = createClient({
-  autoConnect: false,
+  autoConnect: true,
   connectors,
   provider,
 });
