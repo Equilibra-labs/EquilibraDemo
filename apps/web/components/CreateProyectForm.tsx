@@ -59,11 +59,17 @@ export const CreateProjectForm = () => {
   };
 
   return (
-    <div className="space-y-10 divide-y divide-gray-900/10 mt-2 ">
+    <div className="space-y-10  divide-gray-900/10 mt-8  ">
+      <a
+        href="/projects"
+        className="border-double border-4 border-sky-500 text-center rounded-md w-full"
+      >
+        Check out registered Proyects
+      </a>
       <div className="">
         <form className="bg-slate-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
           <div className="px-4 py-6 sm:p-8">
-            <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="">
               <div className="sm:col-span-4">
                 <label
                   htmlFor="address"
@@ -146,7 +152,7 @@ export const CreateProjectForm = () => {
           <div className="flex items-center justify-end gap-x-6 px-4 py-4 sm:px-8">
             <button
               type="submit"
-              className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 w-full"
+              className="rounded-full capitalize font-normal font-white w-full  transition-all tracking-widest flex items-center justify-center hover:bg-white hover:text-black border-2"
               onClick={hanldeSubmit}
             >
               Send Transaction

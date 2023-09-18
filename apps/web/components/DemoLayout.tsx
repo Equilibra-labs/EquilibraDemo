@@ -3,7 +3,7 @@ import React from "react";
 
 export default function DemoLayout({ title, children }) {
   return (
-    <div className="w-[50%] flex flex-col space-y-4 border-2 rounded-xl shadow-lg border-blue-900  align-center p-4 ">
+    <div className="w-[50%] flex flex-col space-y-4 border-2 rounded-xl shadow-lg border-blue-900  align-center p-4  ">
       <h1 className="text-center mt-2">{title}</h1>
       <div className="">{children}</div>
     </div>
