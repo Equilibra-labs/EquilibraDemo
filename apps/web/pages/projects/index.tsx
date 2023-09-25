@@ -5,12 +5,10 @@ import { useEffect } from "react";
 
 const projectUpdateds = `
   query {
-    projectUpdateds(first: 5) {
-      id
-      contenthash
-      admin
-      beneficiary
-      }
+    projects(first: 5) {
+        id
+        beneficiary
+    }
   }
 `;
 
@@ -26,7 +24,7 @@ export const ProjectPage = () => {
   console.log(data);
 
   const { isConnected } = useAccount();
-  if (fetching) return <p>Loading...</p>;
+  if (fetching) return <p>Loading ....</p>;
 
   if (error) return <p>Oh no... {error.message}</p>;
 
@@ -36,14 +34,11 @@ export const ProjectPage = () => {
     <>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-8">
         {data &&
-          data.projectUpdateds.map((proyect) => (
+          data.projects.map((proyect) => (
             <div
               key={proyect.id}
               className="relative text-gray-200 flex items-center space-x-3 rounded-lg border border-gray-600 bg-slate-900 px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
             >
-              <div className="flex-shrink-0">
-                {/* <img className="h-10 w-10 rounded-full" src={proyect.imageUrl} alt="" /> */}
-              </div>
               <div className="min-w-0 flex-1">
                 <a href="#" className="focus:outline-none">
                   <span className="absolute inset-0" aria-hidden="true" />

@@ -32,7 +32,7 @@ export { WagmiConfig, RainbowKitProvider };
 
 //Subgraph endpoint url
 const subgraphURL =
-  "https://api.studio.thegraph.com/query/52339/equilibra-goerli/version/latest";
+  "https://api.thegraph.com/subgraphs/name/blossomlabs/osmoticfund-goerli";
 
 // Create a URQL client
 const client = urqlClient({
