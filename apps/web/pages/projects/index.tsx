@@ -1,13 +1,14 @@
 import { gql, useQuery } from "urql";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
-import { useEffect } from "react";
 
 const projectUpdateds = `
   query {
     projects(first: 5) {
+      admin
         id
         beneficiary
+        contentHash
     }
   }
 `;
@@ -28,7 +29,7 @@ export const ProjectPage = () => {
 
   if (error) return <p>Oh no... {error.message}</p>;
 
-  const spanProps = "text-blue-500";
+  const spanProps = "text-blue-400";
 
   return (
     <>
@@ -60,7 +61,7 @@ export const ProjectPage = () => {
                     <p className="truncate text-sm text-gray-500">
                       {" "}
                       <span className={spanProps}>ContentHash: </span>
-                      {proyect.contenthash}
+                      {proyect.contentHash}
                     </p>
                   </p>
                 </a>

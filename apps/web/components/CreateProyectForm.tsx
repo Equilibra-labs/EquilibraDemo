@@ -59,21 +59,15 @@ export const CreateProjectForm = () => {
   };
 
   return (
-    <div className="space-y-10  divide-gray-900/10 mt-8  ">
-      <a
-        href="/projects"
-        className="border-double border-4 border-sky-500 text-center rounded-md w-full"
-      >
-        Check out registered Proyects
-      </a>
+    <div className="space-y-10  divide-gray-900/10 ">
       <div className="">
-        <form className="bg-slate-800 shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+        <form className="bg-slate-800 shadow-sm  sm:rounded-xl ">
           <div className="px-4 py-6 sm:p-8">
             <div className="">
               <div className="sm:col-span-4">
                 <label
                   htmlFor="address"
-                  className="block text-sm font-medium leading-6 text-gray-200"
+                  className="text-sm font-medium leading-6 text-gray-200"
                 >
                   Beneficiary
                 </label>
@@ -173,6 +167,14 @@ export const CreateProjectForm = () => {
       {isError && (
         <div className="text-red-500 mt-4 ">Error: {error?.message}</div>
       )}
+      <div className="border-2 w-full">
+        <a
+          href="/projects"
+          className="border-4 border-sky-200 text-center rounded-md  text-red-300"
+        >
+          Check out registered Proyects
+        </a>
+      </div>
     </div>
   );
 };

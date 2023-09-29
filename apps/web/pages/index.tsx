@@ -14,7 +14,7 @@ function Home() {
         <ChainData />
         <div className="w-full mt-8 h-full flex p-4 space-x-2">
           <DemoLayout title={"Create proyect"}>
-            <CreateProyect />
+            {/* <CreateProyect /> */}
             <CreateProjectForm />
           </DemoLayout>
           <DemoLayout title={"Create Pool"}>
