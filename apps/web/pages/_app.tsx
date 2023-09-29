@@ -19,10 +19,12 @@ const { chains, provider } = configureChains(
   [goerli, optimism],
   [infuraProvider({ apiKey: process.env.INFURA_API_KEY })]
 );
+
 const { connectors } = getDefaultWallets({
   appName: "Equilibra-demo",
   chains,
 });
+
 const wagmiClient = createClient({
   autoConnect: true,
   connectors,
