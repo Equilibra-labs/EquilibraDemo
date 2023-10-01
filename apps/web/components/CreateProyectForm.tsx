@@ -13,22 +13,15 @@ export const CreateProjectForm = () => {
 
   const crypto = require("crypto");
 
-  function hashStringToBytes32(stringToHash) {
-    // Create a hash object using the SHA-256 algorithm
-    const hash = crypto.createHash("sha256");
+  const hashStringToBytes32 = (str: string) => {
+    return `0x${crypto
+      .createHash("sha256")
+      .update(str)
+      .digest("hex")
+      .slice(0, 64)}`;
+  };
 
-    // Update the hash object with the string to be hashed
-    hash.update(stringToHash);
-
-    // Generate the hexadecimal hash code
-    const hexHash = hash.digest("hex");
-
-    // Convert the hexadecimal hash to a 32-byte buffer by padding with zeroes
-    const bytes32Hash = Buffer.alloc(32, "0", "hex");
-    Buffer.from(hexHash, "hex").copy(bytes32Hash, 0, 0, 32);
-
-    return bytes32Hash;
-  }
+  console.log(hashStringToBytes32("test"));
 
   const debouncedBeneficiary = useDebounce(beneficary);
 
@@ -54,7 +47,6 @@ export const CreateProjectForm = () => {
   const hanldeSubmit = (e) => {
     e.preventDefault();
     console.log("beneficiary", beneficary);
-    //console.log("content", hashStringToBytes32(contentHash));
     write?.();
   };
 
@@ -167,14 +159,14 @@ export const CreateProjectForm = () => {
       {isError && (
         <div className="text-red-500 mt-4 ">Error: {error?.message}</div>
       )}
-      <div className="border-2 w-full">
+      {/* <div className="border-2 w-full">
         <a
           href="/projects"
           className="border-4 border-sky-200 text-center rounded-md  text-red-300"
         >
           Check out registered Proyects
         </a>
-      </div>
+      </div> */}
     </div>
   );
 };

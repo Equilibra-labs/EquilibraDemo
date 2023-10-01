@@ -6,26 +6,30 @@ import { CreateProjectForm } from "./CreateProyectForm";
 import TopBar from "./Topbar";
 
 const route = [
-  { name: "Create proyect", href: "#", current: false },
-  { name: "Create pool", href: "#", current: false },
-  { name: "Support poryect", href: "#", current: false },
+  {
+    name: "Create proyect",
+    component: [<CreateProjectForm />, "#"],
+    current: true,
+  },
+  { name: "Create pool", component: "#", current: false },
+  { name: "Support poryect", component: "#", current: false },
 ];
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Layout() {
   const [currentRoute, setCurrentRoute] = useState(route);
 
-  const handleRouteClick = (index) => {
+  const handleRoute = (index: number) => {
     const updatedRoute = route.map((item, i) => ({
       ...item,
       current: i === index,
     }));
     setCurrentRoute(updatedRoute);
-    console.log(route);
   };
+
   return (
     <>
       <div className="min-h-full">
@@ -47,11 +51,9 @@ export default function Layout() {
 
                   {/* Right section on desktop */}
                   <div className="hidden lg:ml-4 lg:flex lg:items-center lg:pr-0.5">
-                    {/* Profile dropdown */}
+                    {/* Wallet and Chain */}
                     <Menu as="div" className="relative ml-4 flex-shrink-0">
-                      <div>
-                        <TopBar />
-                      </div>
+                      <TopBar />
                     </Menu>
                   </div>
 
@@ -113,7 +115,7 @@ export default function Layout() {
                               "rounded-md  bg-opacity-0 px-3 py-2 text-sm font-medium hover:bg-opacity-10"
                             )}
                             aria-current={item.current ? "page" : undefined}
-                            onClick={() => handleRouteClick(index)}
+                            onClick={() => handleRoute(index)}
                           >
                             {item.name}
                           </button>
@@ -154,25 +156,33 @@ export default function Layout() {
             <h1 className="sr-only">Page title</h1>
             {/* Main 3 column grid */}
             <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
-              {/* Left column */}
-              <div className="grid grid-cols-1 gap-4 lg:col-span-2">
+              {/* Left column  */}
+              <div className="grid grid-cols-1 gap-4 lg:col-span-2 ">
                 <section aria-labelledby="section-1-title">
                   <h2 className="sr-only" id="section-1-title">
                     Section title
                   </h2>
-                  <div className="overflow-hidden rounded-lg bg-slate-200 shadow">
-                    <div className="p-6">{/* Your content */}</div>
+                  <div className="overflow-hidden rounded-lgshadow">
+                    <div className="p-2">
+                      {/* route Component */}
+                      <h1>
+                        {currentRoute.map((item) => (
+                          <div key={item.name}>
+                            {item.current && item.component[0]}
+                          </div>
+                        ))}
+                      </h1>
+                    </div>
                   </div>
                 </section>
               </div>
-
               {/* Right column */}
               <div className="grid grid-cols-1 gap-4">
                 <section aria-labelledby="section-2-title">
                   <h2 className="sr-only" id="section-2-title">
                     Section title
                   </h2>
-                  <div className="overflow-hidden rounded-lg bg-slate-200 shadow">
+                  <div className="overflow-hidden rounded-lg shadow border-blue-100 border-2">
                     <div className="p-6">{/* Your content */}</div>
                   </div>
                 </section>
@@ -181,7 +191,7 @@ export default function Layout() {
           </div>
         </main>
         <footer>
-          <div className="w-full fixed bottom-0 ">
+          <div className="w-full absolute bottom-0 ">
             <div className="py-8 text-center text-sm text-gray-400 sm:text-center">
               <span className="block sm:inline">
                 &copy; 2023 EquiLabs, Inc.
