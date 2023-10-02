@@ -12,7 +12,7 @@ const route = [
     current: true,
   },
   { name: "Create pool", component: "#", current: false },
-  { name: "Support poryect", component: "#", current: false },
+  { name: "Support projects", component: "#", current: false },
 ];
 
 function classNames(...classes: string[]) {
@@ -163,7 +163,7 @@ export default function Layout() {
                     Section title
                   </h2>
                   <div className="overflow-hidden rounded-lgshadow">
-                    <div className="p-2">
+                    <div className="">
                       {/* route Component */}
                       <h1>
                         {currentRoute.map((item) => (
@@ -191,7 +191,7 @@ export default function Layout() {
           </div>
         </main>
         <footer>
-          <div className="w-full absolute bottom-0 ">
+          <div className="w-full relative bottom-0 ">
             <div className="py-8 text-center text-sm text-gray-400 sm:text-center">
               <span className="block sm:inline">
                 &copy; 2023 EquiLabs, Inc.
