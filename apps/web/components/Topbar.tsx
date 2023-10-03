@@ -9,7 +9,7 @@ const TopBar = () => {
   const { isConnected } = useAccount();
 
   return (
-    <div className="flex justify-end p-4 ">
+    <div className=" ">
       <ConnectButton />
     </div>
   );
