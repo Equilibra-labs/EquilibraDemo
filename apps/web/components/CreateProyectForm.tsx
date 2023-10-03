@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, FormEvent } from "react";
 import {
   usePrepareContractWrite,
   useContractWrite,
@@ -6,14 +6,31 @@ import {
 } from "wagmi";
 import { useDebounce } from "../hooks/useDebounce";
 import * as ProjectRegistry from "../abi/ProjectRegistry.json";
+import { toast } from "react-toastify";
 
 export const CreateProjectForm = () => {
-  const [beneficary, setBeneficary] = React.useState();
-  const [contentHash, setContentHash] = React.useState();
+  const [beneficary, setBeneficary] = useState("");
+  const [description, setDescription] = useState("");
 
   const crypto = require("crypto");
 
-  function hashStringToBytes32(stringToHash) {
+  const ipfsJsonUpload = async () => {
+    try {
+      const response = await fetch("/api/ipfs", {
+        method: "POST",
+        body: JSON.stringify({ description: description }),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  function hashStringToBytes32(stringToHash: string) {
     // Create a hash object using the SHA-256 algorithm
     const hash = crypto.createHash("sha256");
 
@@ -36,32 +53,50 @@ export const CreateProjectForm = () => {
     config,
     error: prepareError,
     isError: isPrepareError,
-  } = usePrepareContractWrite({
-    address: ProjectRegistry.address,
-    abi: ProjectRegistry.abi,
-    functionName: "registerProject",
-    args: [beneficary, contentHash],
-    overrides: {
-      gasLimit: 1800000,
-    },
-  });
+  } = usePrepareContractWrite();
+  //     {
+  //     address: ProjectRegistry.address,
+  //     abi: ProjectRegistry.abi,
+  //     functionName: "registerProject",
+  //     args: [beneficary, contentHash],
+  //     overrides: {
+  //       gasLimit: 1800000,
+  //     },
+  //   }
+
   const { data, error, isError, write } = useContractWrite(config);
 
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
 
-  const hanldeSubmit = (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("beneficiary", beneficary);
+    // console.log("beneficiary: " + beneficary);
+
+    console.log("description: " + description);
+
+    const ipfsUpload = ipfsJsonUpload();
+
+    toast.promise(ipfsUpload, {
+      pending: "Uploading to IPFS...",
+      success: "Successfully uploaded!",
+      error: "Ups, something went wrong with IPFS.",
+    });
+
+    // hashStringToBytes32(description);
+
     //console.log("content", hashStringToBytes32(contentHash));
-    write?.();
+    // write?.();
   };
 
   return (
     <div className="space-y-10  divide-gray-900/10 ">
       <div className="">
-        <form className="bg-slate-800 shadow-sm  sm:rounded-xl ">
+        <form
+          onSubmit={(e) => handleSubmit(e)}
+          className="bg-slate-800 shadow-sm  sm:rounded-xl "
+        >
           <div className="px-4 py-6 sm:p-8">
             <div className="">
               <div className="sm:col-span-4">
@@ -75,8 +110,7 @@ export const CreateProjectForm = () => {
                   <div className="flex">
                     <input
                       type="text"
-                      name="website"
-                      id="website"
+                      name="address"
                       className="p-2 w-full rounded-md text-sm text-black bg-blue-100"
                       placeholder="address.."
                       onChange={(e) => setBeneficary(e.target.value)}
@@ -94,12 +128,11 @@ export const CreateProjectForm = () => {
                 </label>
                 <div className="mt-2">
                   <textarea
-                    id="about"
-                    name="about"
+                    name="description"
                     rows={3}
                     className="w-full text-sm text-black rounded-md p-2 outline-none bg-blue-100"
                     defaultValue={""}
-                    onChange={(e) => setContentHash(e.target.value)}
+                    onChange={(e) => setDescription(e.target.value)}
                   />
                 </div>
                 <p className="mt-3 text-sm leading-6 text-gray-400">
@@ -147,7 +180,7 @@ export const CreateProjectForm = () => {
             <button
               type="submit"
               className="rounded-full capitalize font-normal font-white w-full  transition-all tracking-widest flex items-center justify-center hover:bg-white hover:text-black border-2"
-              onClick={hanldeSubmit}
+              //   onClick={hanldeSubmit}
             >
               Send Transaction
             </button>

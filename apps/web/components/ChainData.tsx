@@ -2,7 +2,7 @@ import React from "react";
 import { useAccount, useBalance, useBlockNumber, useConnect } from "wagmi";
 import * as ProjectRegistry from "../abi/ProjectRegistry.json";
 
-function ChainData() {
+export default function ChainData() {
   const { connector: activeConnector, isConnected, address } = useAccount();
   const { data: blockNumber } = useBlockNumber();
 
@@ -23,5 +23,3 @@ function ChainData() {
     </>
   );
 }
-
-export default ChainData;
