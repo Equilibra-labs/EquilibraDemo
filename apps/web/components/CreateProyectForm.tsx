@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent, useState } from "react";
+import React, { FormEvent, ChangeEvent, useState, useEffect } from "react";
 import Image from "next/image";
 import {
   usePrepareContractWrite,
@@ -6,105 +6,155 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import { useDebounce } from "../hooks/useDebounce";
-import * as ProjectRegistry from "../abi/ProjectRegistry.json";
+import { projectRegistry } from "../abi/";
 import { toast } from "react-toastify";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import { stringToBytes } from "viem";
 
-type FormData = {
+type ProjectFormData = {
   githubLink: string;
   description: string;
-  file: string;
+  fileHash: string;
 };
 
 export const CreateProjectForm = () => {
   const [beneficary, setBeneficary] = useState("");
+  const [bytesArray, setBytesArray] = useState<Uint8Array | undefined>(
+    undefined
+  );
   const [file, setFile] = useState<File>();
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ProjectFormData>({
     githubLink: "",
     description: "",
-    file: "",
+    fileHash: "",
   });
 
   const crypto = require("crypto");
 
   const ipfsJsonUpload = async () => {
     try {
-      const response = await fetch("/api/ipfs", {
+      const response = await fetch("/api/ipfs/json", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
           "content-type": "application/json",
         },
       });
-      const data = await response.json();
-      console.log(data);
+      const json = await response.json();
+      if (json?.IpfsHash) {
+        return Promise.resolve(json.IpfsHash);
+      } else {
+        return Promise.reject("No ipfshash returned");
+      }
     } catch (err) {
       console.error(err);
+      return Promise.reject(err);
     }
   };
 
-  function hashStringToBytes32(stringToHash: string) {
-    // Create a hash object using the SHA-256 algorithm
-    const hash = crypto.createHash("sha256");
+  const ipfsFileUpload = async (selectedFile: File) => {
+    const data = new FormData();
+    data.set("file", selectedFile);
+    try {
+      const res = await fetch("/api/ipfs/file", {
+        method: "POST",
+        body: data,
+      });
+      const json = await res.json();
+      if (json?.IpfsHash) {
+        setFormData({ ...formData, fileHash: json?.IpfsHash });
+      } else {
+        return Promise.reject("No ipfshash returned");
+      }
+    } catch (err) {
+      console.error(err);
+      return Promise.reject(err);
+    }
+  };
 
-    // Update the hash object with the string to be hashed
-    hash.update(stringToHash);
-
-    // Generate the hexadecimal hash code
-    const hexHash = hash.digest("hex");
-
-    // Convert the hexadecimal hash to a 32-byte buffer by padding with zeroes
-    const bytes32Hash = Buffer.alloc(32, "0", "hex");
-    Buffer.from(hexHash, "hex").copy(bytes32Hash, 0, 0, 32);
-
-    return bytes32Hash;
-  }
+  const ipfsGet = async () => {
+    try {
+      const res = await fetch(`/api/ipfs/${formData.fileHash}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      // if it is a file it gets a readableStrem
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const debouncedBeneficiary = useDebounce(beneficary);
 
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError,
-  } = usePrepareContractWrite();
-  //     {
-  //     address: ProjectRegistry.address,
-  //     abi: ProjectRegistry.abi,
-  //     functionName: "registerProject",
-  //     args: [beneficiary, initialFormData],
-  //     // overrides: {
-  //     //   gasLimit: 1800000,
-  //     // },
-  //   }
+  const { write, error, isError, data } = useContractWrite({
+    address: projectRegistry.address,
+    abi: projectRegistry.abi,
+    functionName: "registerProject",
+    args: [debouncedBeneficiary, bytesArray],
+    // overrides: {
+    //   gasLimit: 1800000,
+    // },
+  });
+  //   useEffect(() => {
+  //     console.log(error);
+  //   }, [error]);
 
-  const { data, error, isError, write } = useContractWrite(config);
+  //   const { data, error, isError, write } = useContractWrite(config);
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log("beneficiary: " + beneficary);
-
-    // console.log("description: " + description);
 
     const ipfsUpload = ipfsJsonUpload();
 
-    toast.promise(ipfsUpload, {
-      pending: "Uploading to IPFS...",
-      success: "Successfully uploaded!",
-      error: "Ups, something went wrong with IPFS.",
-    });
-
-    // hashStringToBytes32(description);
-
-    //console.log("content", hashStringToBytes32(contentHash));
-    // write?.();
+    toast
+      .promise(ipfsUpload, {
+        pending: "Uploading to IPFS...",
+        success: "Successfully uploaded!",
+        error: "Ups, something went wrong with IPFS.",
+      })
+      .then((ipfsHash: string) => {
+        let bytesArray = stringToBytes(ipfsHash);
+        console.log(debouncedBeneficiary, bytesArray);
+        write({
+          args: [debouncedBeneficiary, bytesArray],
+        });
+        // setBytesArray(bytesArray);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+
+  useEffect(() => {
+    console.log(bytesArray);
+    write?.();
+  }, [bytesArray]);
+
   // Handle upload file
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files && e.target.files[0];
-    // setFormData({ ...formData, file: selectedFile || null });
+    if (!e.target.files) return;
+    const selectedFile = e.target.files[0];
+
+    const ipfsUpload = ipfsFileUpload(selectedFile);
+
+    toast
+      .promise(ipfsUpload, {
+        pending: "Uploading to IPFS...",
+        success: "Successfully uploaded!",
+        error: "Ups, something went wrong with IPFS",
+      })
+      .then(() => {
+        setFile(selectedFile);
+      })
+      .catch((error) => {
+        console.error(`Failed to upload file: ${error}`);
+      });
   };
 
   return (
@@ -126,6 +176,7 @@ export const CreateProjectForm = () => {
                 <div className="mt-1">
                   <div className="flex">
                     <input
+                      value={beneficary}
                       type="text"
                       name="website"
                       id="website"
@@ -152,7 +203,10 @@ export const CreateProjectForm = () => {
                       className="p-2 w-full rounded-md text-sm text-black bg-gray-200"
                       placeholder="paste you link here"
                       onChange={(e) =>
-                        setFormData({ ...formData, githubLink: e.target.value })
+                        setFormData({
+                          ...formData,
+                          githubLink: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -174,7 +228,10 @@ export const CreateProjectForm = () => {
                     placeholder="describe your project in a few words"
                     defaultValue={""}
                     onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
+                      setFormData({
+                        ...formData,
+                        description: e.target.value,
+                      })
                     }
                   />
                 </div>
@@ -194,7 +251,7 @@ export const CreateProjectForm = () => {
                   {file ? (
                     <Image
                       src={URL.createObjectURL(file)}
-                      alt="Cover photo"
+                      alt="Project cover photo"
                       width={200}
                       height={200}
                     />
