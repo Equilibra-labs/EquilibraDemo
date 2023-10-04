@@ -10,6 +10,7 @@ import { projectRegistry } from "../abi/";
 import { toast } from "react-toastify";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { stringToBytes } from "viem";
+import { ethers } from "ethers";
 
 type ProjectFormData = {
   githubLink: string;
@@ -93,7 +94,7 @@ export const CreateProjectForm = () => {
     address: projectRegistry.address,
     abi: projectRegistry.abi,
     functionName: "registerProject",
-    args: [debouncedBeneficiary, bytesArray],
+    // args: [debouncedBeneficiary, bytesArray],
     // overrides: {
     //   gasLimit: 1800000,
     // },
@@ -119,22 +120,18 @@ export const CreateProjectForm = () => {
         error: "Ups, something went wrong with IPFS.",
       })
       .then((ipfsHash: string) => {
-        let bytesArray = stringToBytes(ipfsHash);
-        console.log(debouncedBeneficiary, bytesArray);
+        const abiCoder = new ethers.AbiCoder();
+        const encodedData = abiCoder.encode(["string"], [ipfsHash]);
+
+        console.log("ipfs json hash: " + ipfsHash);
         write({
-          args: [debouncedBeneficiary, bytesArray],
+          args: [debouncedBeneficiary, encodedData],
         });
-        // setBytesArray(bytesArray);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
-
-  useEffect(() => {
-    console.log(bytesArray);
-    write?.();
-  }, [bytesArray]);
 
   // Handle upload file
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
