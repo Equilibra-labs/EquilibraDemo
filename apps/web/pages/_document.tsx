@@ -10,7 +10,7 @@ export default class Document extends NextDocument {
           className={`
         h-full
         bg-gray-900
-        text-slate-100
+        text-slate-200
         
         `}
         >

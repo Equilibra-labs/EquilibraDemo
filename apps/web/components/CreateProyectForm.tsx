@@ -155,7 +155,7 @@ export const CreateProjectForm = () => {
   };
 
   return (
-    <div className="space-y-10  divide-gray-900/10 ">
+    <div className="space-y-10 divide-gray-900/10">
       <div className="">
         <form
           onSubmit={(e) => handleSubmit(e)}
@@ -178,7 +178,7 @@ export const CreateProjectForm = () => {
                       name="website"
                       id="website"
                       className="p-2 w-full rounded-md text-sm text-black bg-gray-200"
-                      placeholder="address"
+                      placeholder="Address"
                       onChange={(e) => setBeneficary(e.target.value)}
                     />
                   </div>
@@ -198,7 +198,7 @@ export const CreateProjectForm = () => {
                       name="website"
                       id="website"
                       className="p-2 w-full rounded-md text-sm text-black bg-gray-200"
-                      placeholder="paste you link here"
+                      placeholder="Paste you link here"
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -222,7 +222,7 @@ export const CreateProjectForm = () => {
                     name="description"
                     rows={3}
                     className="w-full text-sm text-black rounded-md p-2 outline-none bg-gray-200 resize-none min-h-[150px]"
-                    placeholder="describe your project in a few words"
+                    placeholder="Describe your project in a few words"
                     defaultValue={""}
                     onChange={(e) =>
                       setFormData({

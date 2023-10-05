@@ -32,7 +32,7 @@ export default function Layout() {
 
   return (
     <>
-      <div className="min-h-full">
+      <div className="min-h-full ">
         <Popover as="header" className="bg-slate-900 pb-24">
           {({ open }) => (
             <>
@@ -101,7 +101,7 @@ export default function Layout() {
                     </Popover.Button>
                   </div>
                 </div>
-                <div className="hidden border-t border-white border-opacity-20 py-5 lg:block">
+                <div className="hidden border-opacity-20 py-5 lg:block relative">
                   <div className="grid grid-cols-3 items-center gap-8">
                     <div className="col-span-2">
                       <nav className="flex space-x-4">
@@ -151,7 +151,7 @@ export default function Layout() {
           )}
         </Popover>
         {/* Main Components */}
-        <main className="-mt-24 pb-8">
+        <main className="-mt-24 pb-8  relative">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <h1 className="sr-only">Page title</h1>
             {/* Main 3 column grid */}
