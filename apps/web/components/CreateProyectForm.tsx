@@ -9,7 +9,6 @@ import { useDebounce } from "../hooks/useDebounce";
 import { projectRegistry } from "../abi/";
 import { toast } from "react-toastify";
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import { stringToBytes } from "viem";
 import { ethers } from "ethers";
 
 type ProjectFormData = {
@@ -120,7 +119,7 @@ export const CreateProjectForm = () => {
         error: "Ups, something went wrong with IPFS.",
       })
       .then((ipfsHash: string) => {
-        const abiCoder = new ethers.AbiCoder();
+        const abiCoder = new ethers.utils.AbiCoder();
         const encodedData = abiCoder.encode(["string"], [ipfsHash]);
 
         console.log("ipfs json hash: " + ipfsHash);
