@@ -3,6 +3,8 @@ import { Menu, Popover } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { CreateProjectForm } from "./CreateProyectForm";
+import { CreatePool } from "./CreatePool";
+import { PoolCard } from "./PoolCard";
 import TopBar from "./Topbar";
 
 const route = [
@@ -11,8 +13,16 @@ const route = [
     component: [<CreateProjectForm />, "#"],
     current: true,
   },
-  { name: "Create pool", component: "#", current: false },
-  { name: "Support projects", component: "#", current: false },
+  {
+    name: "Create pool",
+    component: [<CreatePool />, <PoolCard />],
+    current: false,
+  },
+  {
+    name: "Support projects",
+    component: ["Support Proyects", "#"],
+    current: false,
+  },
 ];
 
 function classNames(...classes: string[]) {
@@ -151,11 +161,11 @@ export default function Layout() {
           )}
         </Popover>
         {/* Main Components */}
-        <main className="-mt-24 pb-8  relative">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <main className="-mt-24 pb-2 relative ">
+          <div className="mx-auto max-w-3xl px-2 sm:px-6 lg:max-w-7xl lg:px-2 py-2">
             <h1 className="sr-only">Page title</h1>
             {/* Main 3 column grid */}
-            <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
+            <div className="grid grid-cols-1 items-start gap-2 lg:grid-cols-3 lg:gap-8 shadow-lg shadow-slate-800">
               {/* Left column  */}
               <div className="grid grid-cols-1 gap-4 lg:col-span-2 ">
                 <section aria-labelledby="section-1-title">
@@ -182,8 +192,16 @@ export default function Layout() {
                   <h2 className="sr-only" id="section-2-title">
                     Section title
                   </h2>
-                  <div className="overflow-hidden rounded-lg shadow border-blue-100 border-2">
-                    <div className="p-6">{/* Your content */}</div>
+                  <div className="overflow-hidden rounded-lg shadow bg-slate-900 min-h-screen">
+                    <div className="p-2">
+                      {/* Your content */}
+                      {currentRoute.map((item) => (
+                        <div key={item.name}>
+                          <h1></h1>
+                          {item.current && item.component[1]}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </section>
               </div>

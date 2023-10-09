@@ -1,47 +1,66 @@
-import { Box, Card, Image, Stack, Text, Heading } from '@chakra-ui/react'
-import Link from 'next/link'
+import { gql, useQuery } from "urql";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
-type PoolCard = {
-    poolName: string
-    token: string
-    streaming: number
-    streamed: number
-}
+const projectUpdateds = `
+  query { 
+      osmoticPools(first: 5) {
+        address
+        id
+        owner
+        maxActiveProjects
+      }  
+  }
+`;
 
-export const PoolCard = ({poolName, token, streaming, streamed}: PoolCard) => {
+export const PoolCard = () => {
+  const [result] = useQuery({
+    query: projectUpdateds,
+  });
+  const { data, fetching, error } = result;
+
+  const PoolCounts = data?.osmoticPools.length;
+
+  //Loading or Erro State
+  if (fetching) return <p>Loading ....</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
+  //
+
   return (
-    <Stack width="352px" height="114px" maxWidth="100%">
+    <>
+      <div className="">
+        <h1 className="border-2 text-center m-4 rounded-full hover:opacity-70">
+          There are {PoolCounts} Pools available for Streaming
+        </h1>
+        {data &&
+          data.osmoticPools.map((pool) => (
+            <div
+              key={pool.id}
+              className="relative text-gray-200 flex items-center space-x-3 rounded-lg border border-gray-600 bg-slate-900 px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
+            >
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm text-gray-400 mb-2">
+                  <span className="text-blue-400">Max-Active-Projects: </span>
+                  {pool.maxActiveProjects}
+                </p>
+                <p className="truncate text-sm text-gray-500 mb-1">
+                  <span className="text-blue-400">Id: </span>
+                  {pool.id}
+                </p>
+                <p className="truncate text-sm text-gray-500 mb-1">
+                  <span className="text-blue-400">Address List: </span>
+                  {pool.owner}
+                </p>
+                <p className="truncate text-sm text-gray-500">
+                  <span className="text-blue-400">Address: </span>
+                  {pool.address}
+                </p>
+              </div>
+            </div>
+          ))}
+      </div>
+    </>
+  );
+};
 
-      <Card direction={{ base: 'column', sm: 'row' }}
-        overflow='hidden'
-        variant='outline'
-      >
-        <Link href={`/pool/${poolName}`}>
-          <Image
-            src={`/img/${poolName}.png`}
-            alt={poolName}
-            objectFit="cover"
-            width={90}
-            height={"100%"}
-          />
-        </Link>
-        <Box m={3}>
-          <Heading size="md">
-            <Link href={`/pool/${poolName}`}>
-              {poolName} Pool
-            </Link>
-          </Heading>
-          <Text size="xs">
-            <Text as="b" size="xs">Streaming:</Text>
-            {' '}{streaming.toLocaleString()} {token}/mo
-          </Text>
-          <Text size="xs">
-            <Text as="b">Total streamed:</Text>
-            {' '}
-            {streamed.toLocaleString()} {token}
-          </Text>
-        </Box>
-      </Card>
-    </Stack>
-  )
-}
+export default PoolCard;

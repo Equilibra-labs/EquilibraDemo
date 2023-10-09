@@ -183,7 +183,7 @@ export const CreateProjectForm = () => {
               className="rounded-full capitalize font-normal font-white w-full  transition-all tracking-widest flex items-center justify-center hover:bg-white hover:text-black border-2"
               onClick={hanldeSubmit}
             >
-              Send Transaction
+              Send Create Proyect Transaction
             </button>
           </div>
         </form>

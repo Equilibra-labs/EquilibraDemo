@@ -22,8 +22,6 @@ export const ProjectPage = () => {
 
   const { data, fetching, error } = result;
 
-  console.log(data);
-
   const { isConnected } = useAccount();
   if (fetching) return <p>Loading ....</p>;
 
