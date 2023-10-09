@@ -1,15 +1,13 @@
-import React, { FormEvent, ChangeEvent, useState } from "react";
+import React, { useState } from "react";
 import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-  useContractRead,
-  useBlockNumber,
 } from "wagmi";
 import * as OsmoticController from "../abi/OsmoticController.json";
 import { ethers } from "ethers";
 
-//ListAddress: "0xFb5Ff528E295a39b1ba0b053FF7cA410396932c0",
+const ListAddress = "0xFb5Ff528E295a39b1ba0b053FF7cA410396932c0"; // proyect registry address
 
 const initializePool: {
   FundingAddress: string;
@@ -50,14 +48,14 @@ export const CreatePool = () => {
     },
   });
 
-  const params = [
+  const Params = [
     "999999197747000000", // 10 days (864000 seconds) to reach 50% of targetRate
     1,
     19290123456, // 5% of Common Pool per month = Math.floor(0.05e18 / (30 * 24 * 60 * 60))
     "28000000000000000", // 2.5% of Total Support = the minimum stake to start receiving funds
   ];
 
-  const poolDataToBytesForm = () => {
+  const poolDataToBytes = () => {
     const poolBytesCode = new ethers.utils.Interface(
       OSMOTIC_POOL_ABI
     ).encodeFunctionData("initialize", [
@@ -81,12 +79,12 @@ export const CreatePool = () => {
     e.preventDefault();
 
     // Get the encoded pool data
-    const encodedData = poolDataToBytesForm();
+    const encodedData = poolDataToBytes();
 
     // Store the encoded data in the state variable
     setEncodedPoolData(encodedData);
 
-    //console.log("Encoded Pool Data:", encodedData);
+    console.log("Encoded Pool Data:", encodedData);
 
     // Call the write function to send the transaction
     write?.();
@@ -112,7 +110,7 @@ export const CreatePool = () => {
                       name="website"
                       id="website"
                       className="p-2 w-full rounded-md text-sm text-black bg-gray-200"
-                      placeholder="Address to deposit funds of your Pool"
+                      placeholder="Token address to fund your Pool"
                       onChange={(e) =>
                         setCreatePoolData((prevState) => ({
                           ...prevState,
@@ -178,7 +176,7 @@ export const CreatePool = () => {
                   htmlFor="address"
                   className="text-sm font-medium leading-6 text-gray-400"
                 >
-                  Params: Added default values, learn to manupulate them later
+                  Params: Added default values
                 </label>
                 <div className="mt-1">
                   <div className="flex">
@@ -208,7 +206,7 @@ export const CreatePool = () => {
             <button
               type="submit"
               className="rounded-full capitalize font-normal font-white w-full  transition-all tracking-widest flex items-center justify-center hover:bg-white hover:text-black border-2"
-              onClick={hanldeSubmit}
+              onClick={write?.()}
             >
               Send Create Pool Transaction
             </button>
@@ -229,14 +227,6 @@ export const CreatePool = () => {
       {isError && (
         <div className="text-red-500 mt-4 ">Error: {error?.message}</div>
       )}
-      {/* <div className="border-2 w-full">
-        <a
-          href="/projects"
-          className="border-4 border-sky-200 text-center rounded-md  text-red-300"
-        >
-          Check out registered Proyects
-        </a>
-      </div> */}
     </div>
   );
 };
